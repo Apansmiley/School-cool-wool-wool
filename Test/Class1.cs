@@ -14,4 +14,8 @@ namespace Test
             Console.WriteLine(text);
         }
     }
+    class Nobrainer
+    {
+
+    }
 }
