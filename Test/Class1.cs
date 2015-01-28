@@ -8,6 +8,10 @@ namespace Test
 {
     class Class1
     {
-      
+        string text = "This is class1";
+        public void Text()
+        {
+            Console.WriteLine(text);
+        }
     }
 }
