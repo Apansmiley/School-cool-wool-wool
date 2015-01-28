@@ -16,9 +16,12 @@ namespace Test
         {
             watch = new Stopwatch();
             watch.Start();
+            reset(ms);
+        }
+        public void reset(long ms)
+        {
             stopTime = watch.ElapsedMilliseconds + ms;
         }
-
         public bool isDone()
         {
             if (stopTime <= watch.ElapsedMilliseconds)
