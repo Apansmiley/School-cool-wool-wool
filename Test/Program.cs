@@ -12,17 +12,10 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            TimerExample time = new TimerExample(Tick);
-            TimerCallback callback = new TimerCallback(Tick);
-
-            Console.WriteLine("Creating timer: {0}\n",
-                               DateTime.Now.ToString("h:mm:ss"));
-
-            // create a one second timer tick
-            Timer stateTimer = new Timer(callback, null, 0, 1000);
-
-            // loop here forever
-            for (; ; ) { }
+            DateTime Today = DateTime.Today;
+            Console.WriteLine("Hello World!");
+            Console.WriteLine(Today.Date);
+            Console.ReadKey();
         }
     }
     class class3
