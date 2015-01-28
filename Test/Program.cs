@@ -13,24 +13,19 @@ namespace Test
         static void Main(string[] args)
         {
             CTimer timer = new CTimer(1000);
-
+            string text= "#";
             while (true)
             {
+
                 if (timer.isDone())
                 {
-                    Console.WriteLine("Still going");
+                    
+                    Console.Write(text);
                     timer.reset(1000);
                 }
             }
 
-            DateTime Today = DateTime.Today;
-            Console.WriteLine("Hello World!");
-            Console.WriteLine(Today.Date);
-            Console.ReadKey();
+          
         }
-    }
-    class class3
-    {
-
-    }
+    }    
 }
