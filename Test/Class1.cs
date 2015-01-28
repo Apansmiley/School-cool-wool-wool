@@ -19,4 +19,8 @@ namespace Test
 
 
     }
+    class Nobrainer
+    {
+
+    }
 }
