@@ -18,4 +18,8 @@ namespace Test
             
         }
     }
+    class class3
+    {
+
+    }
 }
