@@ -13,6 +13,7 @@ namespace Test
             Console.WriteLine("Hello World!");
             Console.ReadKey();
             //Comment
+            //Another comment
         }
     }
 }
