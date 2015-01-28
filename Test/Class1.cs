@@ -14,8 +14,4 @@ namespace Test
             Console.WriteLine(text);
         }
     }
-    class Class2
-    {
-
-    }
 }
