@@ -10,6 +10,7 @@ namespace School_Project
     {
         static void Main(string[] args)
         {
+            //Hej hej
         }
     }
 }
