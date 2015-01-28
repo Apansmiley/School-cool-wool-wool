@@ -14,10 +14,12 @@ namespace Test
            // Console.WriteLine(text);
         }
     }
-    class class75
+    class TimerExample
     {
-        // Hej Hanna
-
+        static public void Tick(Object stateInfo)
+        {
+            Console.WriteLine("Tick: {0}", DateTime.Now.ToString("h:mm:ss"));
+        }
     }
     class Nobrainer
     {

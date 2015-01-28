@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using Test;
 
 namespace Test
@@ -11,11 +12,17 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            Class1 c = new Class1();
-            c.Text();
-            Console.WriteLine("Hello Github!");
-            Console.ReadKey();
-            
+            TimerExample time = new TimerExample(Tick);
+            TimerCallback callback = new TimerCallback(Tick);
+
+            Console.WriteLine("Creating timer: {0}\n",
+                               DateTime.Now.ToString("h:mm:ss"));
+
+            // create a one second timer tick
+            Timer stateTimer = new Timer(callback, null, 0, 1000);
+
+            // loop here forever
+            for (; ; ) { }
         }
     }
     class class3
