@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Test
 {
     class Class1
     {
-        string text = "This is class1";
         public void Text()
         {
-            Console.WriteLine(text);
+           // Console.WriteLine(text);
         }
     }
     class class75
