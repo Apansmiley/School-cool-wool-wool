@@ -14,4 +14,9 @@ namespace Test
             Console.WriteLine(text);
         }
     }
+    class class75
+    {
+
+
+    }
 }
