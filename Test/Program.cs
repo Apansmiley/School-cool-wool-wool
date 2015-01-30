@@ -12,20 +12,19 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            CTimer timer = new CTimer(1000);
-            string text= "#";
-            while (true)
+            int cmd = int.Parse(Console.ReadLine());
+            if (cmd == 1)
             {
-
-                if (timer.isDone())
-                {
-                    
-                    Console.Write(text);
-                    timer.reset(1000);
-                }
+                CServer server = new CServer();
+                server.Start();
+            }
+            else
+            {
+                CClient client = new CClient();
+                client.start();
             }
 
-          
+            Console.ReadKey();
         }
     }    
 }
