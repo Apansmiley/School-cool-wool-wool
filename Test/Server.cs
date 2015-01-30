@@ -12,10 +12,10 @@ namespace Test
     {
         public void Start()
         {
-            TcpListener server = new TcpListener(IPAddress.Parse("127.0.0.1"), 80);
+            TcpListener server = new TcpListener(IPAddress.Parse("192.168.1.35"), 80);
 
             server.Start();
-            Console.WriteLine("Server has started on 127.0.0.1:80.{0}Waiting for a connection...", Environment.NewLine);
+            Console.WriteLine("Server has started on 192.168.1.35.{0}Waiting for a connection...", Environment.NewLine);
 
             TcpClient client = server.AcceptTcpClient();
 
@@ -31,8 +31,13 @@ namespace Test
                 Byte[] bytes = new Byte[client.Available];
 
                 stream.Read(bytes, 0, bytes.Length);
-
-                Console.WriteLine("Hello");
+                string line = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(line);
+                Console.ForegroundColor = ConsoleColor.Blue;
+                string message = Console.ReadLine();
+                byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
+                stream.Write(byteBuffer, 0, byteBuffer.Length);
             }
         }
     }
