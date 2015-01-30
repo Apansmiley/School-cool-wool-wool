@@ -12,11 +12,8 @@ namespace Test
     {
         public void start()
         {
-            String server = "127.0.0.1"; // Server name or IP address  
-            string message = "Hello";
+            String server = "94.254.65.11"; // Server name or IP address  
 
-            // Convert input String to bytes  
-            byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
 
             // Use port argument if supplied, otherwise default to 7  
             int servPort = 80;
@@ -34,26 +31,25 @@ namespace Test
                 ns = client.GetStream();
 
                 // Send the encoded string to the server  
-                ns.Write(byteBuffer, 0, byteBuffer.Length);
+               // ns.Write(byteBuffer, 0, byteBuffer.Length);
 
-                Console.WriteLine("Sent {0} bytes to server...", byteBuffer.Length);
-
-                int totalBytesRcvd = 0; // Total bytes received so far  
-                int bytesRcvd = 0; // Bytes received in last read  
+              //  Console.WriteLine("Sent {0} bytes to server...", byteBuffer.Length);
 
                 // Receive the same string back from the server  
-                while (totalBytesRcvd < byteBuffer.Length)
+                while (true)
                 {
-                    if ((bytesRcvd = ns.Read(byteBuffer, totalBytesRcvd,
-                    byteBuffer.Length - totalBytesRcvd)) == 0)
-                    {
-                        Console.WriteLine("Connection closed prematurely.");
-                        break;
-                    }
-                    totalBytesRcvd += bytesRcvd;
+
+                    string line = Console.ReadLine();
+                    byte[] byteBuffer = Encoding.ASCII.GetBytes(line);
+                    ns.Write(byteBuffer, 0, byteBuffer.Length);
+
+                    byteBuffer = new Byte[client.Available];
+
+                    ns.Read(byteBuffer, 0, byteBuffer.Length);
+                    line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
+                    Console.WriteLine(line);
                 }
-                Console.WriteLine("Received {0} bytes from server: {1}", totalBytesRcvd,
-                 Encoding.ASCII.GetString(byteBuffer, 0, totalBytesRcvd));
+               
 
             }
             catch (Exception e)
