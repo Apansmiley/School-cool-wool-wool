@@ -38,16 +38,28 @@ namespace Test
                 // Receive the same string back from the server  
                 while (true)
                 {
-
-                    string line = Console.ReadLine();
-                    byte[] byteBuffer = Encoding.ASCII.GetBytes(line);
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    string message = Console.ReadLine();
+                    Byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
                     ns.Write(byteBuffer, 0, byteBuffer.Length);
 
-                    byteBuffer = new Byte[client.Available];
+                    Byte[] bytes = new Byte[client.Available];
+                    byteBuffer = new Byte[100];
 
                     ns.Read(byteBuffer, 0, byteBuffer.Length);
-                    line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
+                    string line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(line);
+
+                    //string line = Console.ReadLine();
+                    //byte[] byteBuffer = Encoding.ASCII.GetBytes(line);
+                    //ns.Write(byteBuffer, 0, byteBuffer.Length);
+
+                    //byteBuffer = new Byte[client.Available];
+
+                    //ns.Read(byteBuffer, 0, byteBuffer.Length);
+                    //line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
+                    //Console.WriteLine(line);
                 }
                
 
