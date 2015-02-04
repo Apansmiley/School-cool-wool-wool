@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
@@ -10,46 +11,90 @@ namespace Test
 {
     class CClient
     {
+        private TcpClient client = null;
+        private NetworkStream stream = null;
+        private Thread thread2 = null;
+        private bool connectionLost = false;
+
+        public void checkForServerResponse()
+        {
+            try
+            {
+                while (true)
+                {
+                   // Console.WriteLine("Waiting for message from server...");
+                    Byte[] byteBuffer = new Byte[100];
+                    if (stream.Read(byteBuffer, 0, byteBuffer.Length) > 0)
+                    {
+                        string line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Message from server: " + line);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                connectionLost = true;
+            }
+        }
         public void start()
         {
-            String server = "94.254.65.11"; // Server name or IP address  
-
+            String server = "172.22.212.225"; // Server name or IP address  
 
             // Use port argument if supplied, otherwise default to 7  
             int servPort = 80;
 
-            TcpClient client = null;
-            NetworkStream ns = null;
-
             try
             {
+                Console.WriteLine("Trying to connect to server...");
                 // Create socket that is connected to server on specified port  
                 client = new TcpClient(server, servPort);
 
-                Console.WriteLine("Connected to server......");
+                if (client.Connected)
+                {
+                    Console.WriteLine("Connected to server......");
+                    thread2 = new Thread(new ThreadStart(checkForServerResponse));
+                    thread2.Start();
+                }
+                else
+                    Console.WriteLine("Failed to connect to server");
 
-                ns = client.GetStream();
+                stream = client.GetStream();
 
-                // Send the encoded string to the server  
-               // ns.Write(byteBuffer, 0, byteBuffer.Length);
-
-              //  Console.WriteLine("Sent {0} bytes to server...", byteBuffer.Length);
-
-                // Receive the same string back from the server  
                 while (true)
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    string message = Console.ReadLine();
-                    Byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
-                    ns.Write(byteBuffer, 0, byteBuffer.Length);
+                    if (connectionLost)
+                        break;
 
-                    Byte[] bytes = new Byte[client.Available];
-                    byteBuffer = new Byte[100];
+                    Console.WriteLine("Commands: Send, Exit.");
+                    string cmd = Console.ReadLine();
+                    if(cmd == "send" || cmd == "Send")
+                    {
+                        Console.Write("Type message to server: ");
+                        string message = Console.ReadLine();
+                        Byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
+                        //Send the encoded string to the server  
+                        stream.Write(byteBuffer, 0, byteBuffer.Length);
+                        Console.WriteLine("Message " + message + " was sent to the server.");
+                    }
+                    else if (cmd == "exit" || cmd == "Exit")
+                    {
+                        break;
+                    }
+                    //Console.ForegroundColor = ConsoleColor.Blue;
+                    //string message = Console.ReadLine();
+                    //Byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
+                    //stream.Write(byteBuffer, 0, byteBuffer.Length);
 
-                    ns.Read(byteBuffer, 0, byteBuffer.Length);
-                    string line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(line);
+                    //Byte[] bytes = new Byte[client.Available];
+                    //byteBuffer = new Byte[100];
+
+                    //stream.Read(byteBuffer, 0, byteBuffer.Length);
+                    //string line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
+                    //Console.ForegroundColor = ConsoleColor.Red;
+                    //Console.WriteLine(line);
 
                     //string line = Console.ReadLine();
                     //byte[] byteBuffer = Encoding.ASCII.GetBytes(line);
@@ -61,8 +106,9 @@ namespace Test
                     //line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
                     //Console.WriteLine(line);
                 }
-               
-
+                stream.Close();
+                client.Close();
+                thread2.Abort();
             }
             catch (Exception e)
             {
@@ -70,8 +116,9 @@ namespace Test
             }
             finally
             {
-                ns.Close();
+                stream.Close();
                 client.Close();
+                thread2.Abort();
             } 
         }
     }
