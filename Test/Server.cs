@@ -14,10 +14,10 @@ namespace Test
         List<TcpClient> clientList;
         TcpListener server;
         Thread ClientConnection;
-        NetworkStream stream2;
+
         Thread ClientMessage;
         TcpClient client;
-        Thread ClientRead;
+
         public void Start()
         {
             clientList = new List<TcpClient>();
@@ -32,9 +32,9 @@ namespace Test
                     LocalIp = ip.ToString();
                     break;
                 }
-                
+
             }
-             server = new TcpListener(IPAddress.Parse(LocalIp), 80);
+            server = new TcpListener(IPAddress.Parse(LocalIp), 80);
 
             server.Start();
             Console.WriteLine("Server has started on: " + LocalIp + "{0}Waiting for a connection...", Environment.NewLine);
@@ -42,25 +42,18 @@ namespace Test
             ClientConnection.Start();
             ClientMessage = new Thread(new ThreadStart(Clientmessage));
             ClientMessage.Start();
-            //ClientRead = new Thread(new ThreadStart(Getmessage));
-           
-           //ClientRead.Start(stream);
+
             while (true)
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
-                string message = Console.ReadLine();
-                byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
-                foreach (TcpClient c in clientList)
-                {
-                    if(c != null)
-                    c.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
-                }
+                string message = "Server: " + Console.ReadLine();
+                ReturnMessagetoClients(message, null);
             }
 
-        } 
+        }
 
         public void Clientconnected()
-          {
+        {
             while (true)
             {
                 client = server.AcceptTcpClient();
@@ -76,7 +69,7 @@ namespace Test
 
             while (true)
             {
-               
+
             }
         }
         public void Getmessage(TcpClient newClient)
@@ -93,10 +86,25 @@ namespace Test
                     string line = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(line);
+                    ReturnMessagetoClients("Client: "+ line, newClient);
+                    Console.ForegroundColor = ConsoleColor.Blue;
                 }
             }
-          }
         }
+        public void ReturnMessagetoClients(string line, TcpClient exclude)
+        {
+            
+
+            byte[] byteBuffer = Encoding.ASCII.GetBytes(line);
+
+            foreach (TcpClient c in clientList)
+            {
+                if (c != null && c != exclude)
+                    c.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+        }
+    }
 
 
 }
