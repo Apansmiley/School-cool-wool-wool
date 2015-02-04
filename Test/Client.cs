@@ -14,7 +14,7 @@ namespace Test
         private TcpClient client = null;
         private NetworkStream stream = null;
         private Thread thread2 = null;
-        private bool connectionLost = false;
+       // private bool connectionLost = false;
 
         public void checkForServerResponse()
         {
@@ -28,20 +28,19 @@ namespace Test
                     {
                         string line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Message from server: " + line);
-                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine(line);
+                        Console.ForegroundColor = ConsoleColor.Blue;
                     }
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                connectionLost = true;
             }
         }
         public void start()
         {
-            String server = "172.22.212.132"; // Server name or IP address  
+            String server = "94.254.65.11"; // Server name or IP address  
 
             // Use port argument if supplied, otherwise default to 7  
             int servPort = 80;
@@ -69,21 +68,25 @@ namespace Test
 
                 while (true)
                 {
-                    if (connectionLost)
-                        break;
 
-                    Console.WriteLine("Commands: Send, Exit.");
-                    string cmd = Console.ReadLine();
-                    if(cmd == "send" || cmd == "Send")
-                    {
-                        Console.Write("Type message to server: ");
-                        string message = Console.ReadLine();
-                        Byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
-                        //Send the encoded string to the server  
+                    //Console.WriteLine("Commands: Send, Exit.");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    string message = Console.ReadLine();
+                    Console.ForegroundColor = ConsoleColor.Red;
+
+                    Byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
+                    //Send the encoded string to the server  
+                    if(client.Connected)
                         stream.Write(byteBuffer, 0, byteBuffer.Length);
-                        Console.WriteLine("Message " + message + " was sent to the server.");
+                    else
+                    {
+                        Console.WriteLine("Connection lost...");
+                        Console.ReadKey();
+                        break;
                     }
-                    else if (cmd == "exit" || cmd == "Exit")
+                    //Console.WriteLine("Message " + message + " was sent to the server.");
+
+                    if (message == "exit" || message == "Exit")
                     {
                         break;
                     }
