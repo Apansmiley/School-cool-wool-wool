@@ -33,45 +33,37 @@ namespace Test
             Console.WriteLine("Server has started on: " + LocalIp +  "{0}Waiting for a connection...", Environment.NewLine);
         } 
 
-         public void Clientconnected ()
-          {
-            while (true)
+        public void Clientconnected ()
+        {
+        while (true)
+        {
+            TcpClient client = server.AcceptTcpClient();
+            Console.WriteLine("Connection accepted.");
+            NetworkStream stream = client.GetStream();
+
+            var childTcpclientThread = new Thread(() =>
             {
-                TcpClient client = server.AcceptTcpClient();
-                Console.WriteLine("Connection accepted.");
-                NetworkStream stream = client.GetStream();
+                // while (!stream.DataAvailable) ;
+                Byte[] bytes = new Byte[client.Available];
 
-                var childTcpclientThread = new Thread(() =>
-                {
-                    // while (!stream.DataAvailable) ;
-                    Byte[] bytes = new Byte[client.Available];
-
-                    stream.Read(bytes, 0, bytes.Length);
-                    string line = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(line);
+                stream.Read(bytes, 0, bytes.Length);
+                string line = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(line);
                     
-                });
+            });
                 
 
                                 
-                Console.ForegroundColor = ConsoleColor.Blue;
-                string message = Console.ReadLine();
-                byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
-                stream.Write(byteBuffer, 0, byteBuffer.Length);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            string message = Console.ReadLine();
+            byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
+            stream.Write(byteBuffer, 0, byteBuffer.Length);
                
-                childTcpclientThread.Start();
-            }
-          }
+            childTcpclientThread.Start();
+        }
+        }
 
          
-        }
-        static void CurrentDomain_ProcessExit(object sender, EventArgs e)
-        {
-            Console.WriteLine("Exit");
-            
-
-        }
-       
     }
 }
