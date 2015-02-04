@@ -12,10 +12,22 @@ namespace Test
     {
         public void Start()
         {
-            TcpListener server = new TcpListener(IPAddress.Parse("192.168.1.35"), 80);
+            IPHostEntry host;
+            string LocalIp = "";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    LocalIp = ip.ToString();
+                    break;
+                }
+                
+            }
+            TcpListener server = new TcpListener(IPAddress.Parse(LocalIp), 80);
 
             server.Start();
-            Console.WriteLine("Server has started on 192.168.1.35.{0}Waiting for a connection...", Environment.NewLine);
+            Console.WriteLine("Server has started on" + LocalIp +  "{0}Waiting for a connection...", Environment.NewLine);
 
             TcpClient client = server.AcceptTcpClient();
 
