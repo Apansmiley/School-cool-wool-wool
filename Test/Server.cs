@@ -27,7 +27,7 @@ namespace Test
             TcpListener server = new TcpListener(IPAddress.Parse(LocalIp), 80);
 
             server.Start();
-            Console.WriteLine("Server has started on" + LocalIp +  "{0}Waiting for a connection...", Environment.NewLine);
+            Console.WriteLine("Server has started on: " + LocalIp +  "{0}Waiting for a connection...", Environment.NewLine);
 
             TcpClient client = server.AcceptTcpClient();
 
