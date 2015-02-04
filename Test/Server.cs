@@ -20,7 +20,7 @@ namespace Test
         Thread ClientRead;
         public void Start()
         {
-     
+            ClientList = new List<TcpClient>();
             IPHostEntry host;
             string LocalIp = "";
             host = Dns.GetHostEntry(Dns.GetHostName());
