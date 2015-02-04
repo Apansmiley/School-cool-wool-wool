@@ -53,7 +53,7 @@ namespace Test
                 foreach (TcpClient c in clientList)
                 {
                     if(c != null)
-                      c.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
+                    c.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
                 }
             }
 
