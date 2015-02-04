@@ -11,9 +11,10 @@ namespace Test
 {
     class CServer
     {
+        List<TcpClient> ClientList;
         TcpListener server;
         Thread ClientConnection;
-        NetworkStream stream;
+        NetworkStream stream2;
         Thread ClientMessage;
         TcpClient client;
         Thread ClientRead;
@@ -41,9 +42,19 @@ namespace Test
             ClientMessage = new Thread(new ThreadStart(Clientmessage));
             ClientMessage.Start();
             //ClientRead = new Thread(new ThreadStart(Getmessage));
-            //ClientRead.Start(stream);
+           
+           //ClientRead.Start(stream);
+            while (true)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                string message = Console.ReadLine();
+                byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
+                foreach (TcpClient c in ClientList)
+                {
 
-
+                    c.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
+                }
+            }
 
         } 
 
@@ -53,8 +64,8 @@ namespace Test
             {
                 client = server.AcceptTcpClient();
                 Console.WriteLine("Connection accepted.");
-                stream = client.GetStream();
-                var threading = new Thread(() => Getmessage(stream));
+                ClientList.Add(client);
+                var threading = new Thread(() => Getmessage(client.GetStream()));
                 threading.Start();
             }
         }
@@ -64,10 +75,7 @@ namespace Test
 
             while (true)
             {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                string message = Console.ReadLine();
-                byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
-                stream.Write(byteBuffer, 0, byteBuffer.Length);
+               
             }
         }
         public void Getmessage(NetworkStream stream)
