@@ -19,7 +19,7 @@ namespace Test
         Thread ClientRead;
         public void Start()
         {
-
+     
             IPHostEntry host;
             string LocalIp = "";
             host = Dns.GetHostEntry(Dns.GetHostName());
@@ -30,9 +30,9 @@ namespace Test
                     LocalIp = ip.ToString();
                     break;
                 }
-
+                
             }
-            server = new TcpListener(IPAddress.Parse(LocalIp), 80);
+             server = new TcpListener(IPAddress.Parse(LocalIp), 80);
 
             server.Start();
             Console.WriteLine("Server has started on: " + LocalIp + "{0}Waiting for a connection...", Environment.NewLine);
@@ -45,10 +45,10 @@ namespace Test
 
 
 
-        }
+        } 
 
         public void Clientconnected()
-        {
+          {
             while (true)
             {
                 client = server.AcceptTcpClient();
@@ -85,8 +85,8 @@ namespace Test
                     Console.WriteLine(line);
                 }
             }
+          }
         }
-    }
 
 
 }

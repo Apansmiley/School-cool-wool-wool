@@ -59,7 +59,11 @@ namespace Test
                     thread2.Start();
                 }
                 else
+                {
                     Console.WriteLine("Failed to connect to server");
+                    Console.ReadKey();
+                    return;
+                }
 
                 stream = client.GetStream();
 
@@ -106,14 +110,14 @@ namespace Test
                     //line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
                     //Console.WriteLine(line);
                 }
-                stream.Close();
-                client.Close();
-                thread2.Abort();
+                //stream.Close();
+                //client.Close();
+                //thread2.Abort();
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(e.Message);
+            //}
             finally
             {
                 stream.Close();
