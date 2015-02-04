@@ -83,7 +83,8 @@ namespace Test
                     Byte[] bytes = new Byte[newClient.Available];
 
                     stream.Read(bytes, 0, bytes.Length);
-                    string line = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
+                    
+                    string line = Encoding.Unicode.GetString(bytes, 0, bytes.Length);
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(line);
                     ReturnMessagetoClients("Client: "+ line, newClient);
@@ -95,7 +96,7 @@ namespace Test
         {
             
 
-            byte[] byteBuffer = Encoding.ASCII.GetBytes(line);
+            byte[] byteBuffer = Encoding.Unicode.GetBytes(line);
 
             foreach (TcpClient c in clientList)
             {
