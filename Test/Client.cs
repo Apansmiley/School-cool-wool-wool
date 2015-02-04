@@ -41,7 +41,7 @@ namespace Test
         }
         public void start()
         {
-            String server = "172.22.212.225"; // Server name or IP address  
+            String server = "172.22.212.132"; // Server name or IP address  
 
             // Use port argument if supplied, otherwise default to 7  
             int servPort = 80;

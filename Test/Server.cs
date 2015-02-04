@@ -11,7 +11,7 @@ namespace Test
 {
     class CServer
     {
-        List<TcpClient> ClientList;
+        List<TcpClient> clientList;
         TcpListener server;
         Thread ClientConnection;
         NetworkStream stream2;
@@ -20,7 +20,8 @@ namespace Test
         Thread ClientRead;
         public void Start()
         {
-     
+            clientList = new List<TcpClient>();
+
             IPHostEntry host;
             string LocalIp = "";
             host = Dns.GetHostEntry(Dns.GetHostName());
@@ -49,10 +50,10 @@ namespace Test
                 Console.ForegroundColor = ConsoleColor.Blue;
                 string message = Console.ReadLine();
                 byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
-                foreach (TcpClient c in ClientList)
+                foreach (TcpClient c in clientList)
                 {
-
-                    c.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
+                    if(c != null)
+                      c.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
                 }
             }
 
@@ -64,8 +65,8 @@ namespace Test
             {
                 client = server.AcceptTcpClient();
                 Console.WriteLine("Connection accepted.");
-                ClientList.Add(client);
-                var threading = new Thread(() => Getmessage(client.GetStream()));
+                clientList.Add(client);
+                var threading = new Thread(() => Getmessage(client));
                 threading.Start();
             }
         }
@@ -78,14 +79,15 @@ namespace Test
                
             }
         }
-        public void Getmessage(NetworkStream stream)
+        public void Getmessage(TcpClient newClient)
         {
             while (true)
             {
+                NetworkStream stream = newClient.GetStream();
                 if (stream != null)
                 {
                     while (!stream.DataAvailable) ;
-                    Byte[] bytes = new Byte[client.Available];
+                    Byte[] bytes = new Byte[newClient.Available];
 
                     stream.Read(bytes, 0, bytes.Length);
                     string line = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
