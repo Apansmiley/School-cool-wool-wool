@@ -26,7 +26,7 @@ namespace Test
                     Byte[] byteBuffer = new Byte[100];
                     if (stream.Read(byteBuffer, 0, byteBuffer.Length) > 0)
                     {
-                        string line = Encoding.ASCII.GetString(byteBuffer, 0, byteBuffer.Length);
+                        string line = Encoding.Unicode.GetString(byteBuffer, 0, byteBuffer.Length);
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(line);
                         Console.ForegroundColor = ConsoleColor.Blue;
@@ -40,7 +40,10 @@ namespace Test
         }
         public void start()
         {
-            String server = "94.254.65.11"; // Server name or IP address  
+            //String server = "94.254.65.11";
+            //String server = "172.22.212.225";
+            //String server = "192.168.150.1";
+            String server = "172.22.212.132";
 
             // Use port argument if supplied, otherwise default to 7  
             int servPort = 80;
@@ -74,7 +77,7 @@ namespace Test
                     string message = Console.ReadLine();
                     Console.ForegroundColor = ConsoleColor.Red;
 
-                    Byte[] byteBuffer = Encoding.ASCII.GetBytes(message);
+                    Byte[] byteBuffer = Encoding.Unicode.GetBytes(message);
                     //Send the encoded string to the server  
                     if(client.Connected)
                         stream.Write(byteBuffer, 0, byteBuffer.Length);
