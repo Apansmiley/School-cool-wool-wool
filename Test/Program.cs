@@ -31,7 +31,7 @@ namespace Test
                 break;
             }
 
-            Console.ReadKey();
+          
         }
     }    
 }
