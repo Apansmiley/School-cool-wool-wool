@@ -35,15 +35,15 @@ namespace Test
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("Server disconnected...");
             }
         }
         public void start()
         {
             //String server = "94.254.65.11";
-            //String server = "172.22.212.225";
+            String server = "172.22.212.179";
             //String server = "192.168.150.1";
-            String server = "172.22.212.132";
+            //String server = "172.22.230.132";
 
             // Use port argument if supplied, otherwise default to 7  
             int servPort = 80;

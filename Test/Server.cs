@@ -65,24 +65,6 @@ namespace Test
             }
         }
 
-        //TODO: fixa så att den kan kolla om klienten är connected eller inte.
-        public void checkClientConnection(TcpClient tcp)
-        {
-            if (tcp.Client.Poll(0, SelectMode.SelectWrite))
-            {
-                byte[] buff = new byte[1];
-                if (!tcp.Connected)
-                    Console.WriteLine("Disconnected...");
-
-                //byte[] buff = new byte[1];
-                //if(tcp.Client.Receive(buff, SocketFlags.Peek) == 0)
-                //{
-                //    Console.WriteLine("Client disconnected");
-                //}
-            }
-                
-        }
-
         //public void Clientmessage()
         //{
 
@@ -93,7 +75,7 @@ namespace Test
         //}
         public void checkIncomingMessage(TcpClient newClient)
         {
-            while (true)
+            while (newClient.Connected)
             {
                 NetworkStream stream = newClient.GetStream();
                 if (stream != null)
@@ -112,20 +94,34 @@ namespace Test
         }
         public void sendMessagetoClients(string line, TcpClient exclude)
         {
-            //Kollar om alla klienter är connectade.
-            foreach (TcpClient c in clientList)
-            {
-                checkClientConnection(c);
-            }
 
             byte[] byteBuffer = Encoding.Unicode.GetBytes(line);
 
+            List<TcpClient> toRemove = new List<TcpClient>();
+
             foreach (TcpClient c in clientList)
             {
-                if (c != exclude)
+                try
                 {
-                    c.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
-                } Console.ForegroundColor = ConsoleColor.Red;
+                    if (c != exclude)
+                    {
+                        c.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
+                        c.GetStream().Flush();
+                    } 
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Client disconnected...");
+                    toRemove.Add(c);
+                }
+            }
+
+           // Console.ForegroundColor = ConsoleColor.Red;
+
+            //Removes disconnected clients.
+            foreach (TcpClient c in toRemove)
+            {
+                clientList.Remove(c);
             }
         }
     }
