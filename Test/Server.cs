@@ -11,16 +11,26 @@ namespace Test
 {
     class CServer
     {
-        List<TcpClient> clientList;
+       public class SClient
+        {
+            public TcpClient tcp;
+            public string nickname;
+            bool closed;
+
+            public void setClosed(bool c) { closed = c; }
+           public bool isClosed() { return closed; }
+        }
+        List<SClient> clientList;
+
         TcpListener server;
         Thread ClientConnection;
 
-        Thread ClientMessage;
+        //Thread ClientMessage;
       //  TcpClient client;
 
         public void Start()
         {
-            clientList = new List<TcpClient>();
+            clientList = new List<SClient>();
 
             IPHostEntry host;
             string LocalIp = "";
@@ -58,9 +68,27 @@ namespace Test
             while (true)
             {
                 TcpClient client = server.AcceptTcpClient();
+
                 Console.WriteLine("Connection accepted.");
-                clientList.Add(client);
-                var threading = new Thread(() => checkIncomingMessage(client));
+
+                string nickname = "";
+
+                while (nickname.Length == 0)
+                {
+                    Byte[] bytes = new Byte[client.Available];
+                    client.GetStream().Read(bytes, 0, bytes.Length);
+                    nickname = Encoding.Unicode.GetString(bytes, 0, bytes.Length);
+                }
+
+                Console.WriteLine("Client " + nickname + " connected.");
+
+                SClient newClient = new SClient();
+                newClient.tcp = client;
+                newClient.nickname = nickname;
+
+                clientList.Add(newClient);
+
+                var threading = new Thread(() => checkIncomingMessage(newClient));
                 threading.Start();
             }
         }
@@ -73,54 +101,78 @@ namespace Test
 
         //    }
         //}
-        public void checkIncomingMessage(TcpClient newClient)
+        public void checkIncomingMessage(SClient client)
         {
-            while (newClient.Connected)
+            TcpClient newClient = client.tcp;
+            try
             {
-                NetworkStream stream = newClient.GetStream();
-                if (stream != null)
+                while (!client.isClosed())
                 {
-                    while (!stream.DataAvailable) ;
-                    Byte[] bytes = new Byte[newClient.Available];
+                    NetworkStream stream = newClient.GetStream();
+                    if (stream != null)
+                    {
+                        while (!stream.DataAvailable) ;
+                        Byte[] bytes = new Byte[newClient.Available];
 
-                    stream.Read(bytes, 0, bytes.Length);
-                    string line = Encoding.Unicode.GetString(bytes, 0, bytes.Length);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(line);
-                    sendMessagetoClients("Client: "+ line, newClient);
-                    Console.ForegroundColor = ConsoleColor.Blue;
+                        stream.Read(bytes, 0, bytes.Length);
+                        string line = client.nickname;
+                        line += ": ";
+                        line += Encoding.Unicode.GetString(bytes, 0, bytes.Length);
+
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(line);
+                        sendMessagetoClients(line, newClient);
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                    }
                 }
+            }
+            catch
+            {
+                Console.WriteLine("Failed to read message from client");
             }
         }
         public void sendMessagetoClients(string line, TcpClient exclude)
         {
+            string newLine = line;
+            int pos = 0;
+            foreach(SClient c in clientList)
+            {
+                if(c.tcp == exclude)
+                {
+                    newLine = c.nickname;
+                    newLine += ": ";
+                    newLine += line;
+                }
+                pos++;
+            }
 
-            byte[] byteBuffer = Encoding.Unicode.GetBytes(line);
+            byte[] byteBuffer = Encoding.Unicode.GetBytes(newLine);
 
-            List<TcpClient> toRemove = new List<TcpClient>();
+            List<SClient> toRemove = new List<SClient>();
 
-            foreach (TcpClient c in clientList)
+            foreach (SClient c in clientList)
             {
                 try
                 {
-                    if (c != exclude)
+                    if (c.tcp != exclude)
                     {
-                        c.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
-                        c.GetStream().Flush();
+                        c.tcp.GetStream().Write(byteBuffer, 0, byteBuffer.Length);
+                        c.tcp.GetStream().Flush();
                     } 
                 }
                 catch(Exception e)
                 {
-                    Console.WriteLine("Client disconnected...");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Client " + c.nickname + " disconnected...");
                     toRemove.Add(c);
                 }
             }
 
-           // Console.ForegroundColor = ConsoleColor.Red;
-
             //Removes disconnected clients.
-            foreach (TcpClient c in toRemove)
+            foreach (SClient c in toRemove)
             {
+                c.setClosed(true);
+                c.tcp.Close();
                 clientList.Remove(c);
             }
         }
