@@ -18,12 +18,14 @@ namespace Test
             bool closed;
             public void setClosed(bool c) { closed = c; }
             public bool isClosed() { return closed; }
+
+            public bool gameReady = false;
         }
         List<SClient> clientList;
         TcpListener server;
         Thread ClientConnection;
-        //Thread ClientMessage;
-        // TcpClient client;
+
+
         public void Start()
         {
             clientList = new List<SClient>();
@@ -67,6 +69,7 @@ namespace Test
                         if (client.GetStream().Read(bytes, 0, bytes.Length) > 0)
                             nickname = Encoding.Unicode.GetString(bytes, 0, bytes.Length);
                     }
+
                     Console.WriteLine("Client " + nickname + " connected.");
                     SClient newClient = new SClient();
                     newClient.tcp = client;
@@ -82,6 +85,13 @@ namespace Test
                 }
             }
         }
+
+        public void gameThread()
+        {
+            
+            
+        }
+
         public void checkIncomingMessage(SClient client)
         {
             TcpClient newClient = client.tcp;
@@ -95,13 +105,32 @@ namespace Test
                         while (!stream.DataAvailable) ;
                         Byte[] bytes = new Byte[newClient.Available];
                         stream.Read(bytes, 0, bytes.Length);
-                        string line = client.nickname;
-                        line += ": ";
-                        line += Encoding.Unicode.GetString(bytes, 0, bytes.Length);
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(line);
-                        sendMessagetoClients(line, null);
-                        Console.ForegroundColor = ConsoleColor.Blue;
+                        string line = Encoding.Unicode.GetString(bytes, 0, bytes.Length);
+
+                        if (line.Length > 0)
+                        {
+                            if (line[0] == '#')
+                            {
+                                Console.WriteLine(line);
+                                if (line == "#ready")
+                                {
+                                    sendMessagetoClients(client.nickname + " is ready for hängagubbe.", null);
+                                    Console.WriteLine(client.nickname + " is ready for hängagubbe.");
+                                    client.gameReady = true;
+                                }
+                            }
+                            else
+                            {
+                                line = client.nickname;
+                                line += ": ";
+                                line += Encoding.Unicode.GetString(bytes, 0, bytes.Length);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine(line);
+                                sendMessagetoClients(line, null);
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                            }
+                        }
+
                     }
                 }
             }
