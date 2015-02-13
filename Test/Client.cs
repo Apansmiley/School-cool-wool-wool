@@ -110,7 +110,7 @@ namespace Test
 
                 while (true)
                 {
-                    drawImage();
+                   // drawImage();
                    // drawLog();
 
                     //Console.WriteLine("Commands: Send, Exit.");
