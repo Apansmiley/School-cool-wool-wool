@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace Test
 {
@@ -60,7 +61,6 @@ namespace Test
                 sendMessagetoClients(message, null);
 
             }
-
         }
 
         public void Clientconnected()
@@ -72,35 +72,37 @@ namespace Test
                 Console.WriteLine("Connection accepted.");
 
                 string nickname = "";
-
-                while (nickname.Length == 0)
+                try
                 {
-                    Byte[] bytes = new Byte[client.Available];
-                    client.GetStream().Read(bytes, 0, bytes.Length);
-                    nickname = Encoding.Unicode.GetString(bytes, 0, bytes.Length);
+
+                    while (nickname.Length == 0)
+                    {
+                        Byte[] bytes = new Byte[client.Available];
+                        if(client.GetStream().Read(bytes, 0, bytes.Length) > 0)
+                            nickname = Encoding.Unicode.GetString(bytes, 0, bytes.Length);
+                    }
+
+                    Console.WriteLine("Client " + nickname + " connected.");
+
+                    SClient newClient = new SClient();
+                    newClient.tcp = client;
+                    newClient.nickname = nickname;
+
+
+                    clientList.Add(newClient);
+
+                    var threading = new Thread(() => checkIncomingMessage(newClient));
+                    threading.Start();
+
+                    sendMessagetoClients(nickname + " joined the club.", null);
                 }
-
-                Console.WriteLine("Client " + nickname + " connected.");
-
-                SClient newClient = new SClient();
-                newClient.tcp = client;
-                newClient.nickname = nickname;
-
-                clientList.Add(newClient);
-
-                var threading = new Thread(() => checkIncomingMessage(newClient));
-                threading.Start();
+                catch
+                {
+                    Console.WriteLine("Failed to get nickname");
+                }
             }
         }
 
-        //public void Clientmessage()
-        //{
-
-        //    while (true)
-        //    {
-
-        //    }
-        //}
         public void checkIncomingMessage(SClient client)
         {
             TcpClient newClient = client.tcp;
@@ -121,7 +123,7 @@ namespace Test
 
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(line);
-                        sendMessagetoClients(line, newClient);
+                        sendMessagetoClients(line, null);
                         Console.ForegroundColor = ConsoleColor.Blue;
                     }
                 }
@@ -131,6 +133,7 @@ namespace Test
                 Console.WriteLine("Failed to read message from client");
             }
         }
+
         public void sendMessagetoClients(string line, TcpClient exclude)
         {
             string newLine = line;
