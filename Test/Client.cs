@@ -11,6 +11,8 @@ namespace Test
 {
     class CClient
     {
+        private List<string> chatLog = new List<string>();
+        private char[,] image = new char[9, 6];
         private TcpClient client = null;
         private NetworkStream stream = null;
         private Thread thread2 = null;
@@ -29,7 +31,7 @@ namespace Test
                         string line = Encoding.Unicode.GetString(byteBuffer, 0, byteBuffer.Length);
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(line);
-                        Console.ForegroundColor = ConsoleColor.Blue;
+                        chatLog.Add(line);
                     }
                 }
             }
@@ -38,12 +40,42 @@ namespace Test
                 Console.WriteLine("Server disconnected...");
             }
         }
+        public void drawImage()
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Clear();
+            for (int y = 0; y < 6; y++)
+            {
+                string line = "";
+                for (int x = 0; x < 9; x++)
+                {
+                    line += image[x, y];
+                }
+                Console.WriteLine(line);
+            }
+        }
+        public void drawLog()
+        {
+            foreach(string s in chatLog)
+            {
+                Console.WriteLine(chatLog);
+            }
+        }
         public void start()
         {
+            for(int y = 0; y < 6; y++)
+            {
+                for(int x = 0; x < 9; x++)
+                {
+                    image[x,y] = '.';
+                }
+            }
+
             //String server = "94.254.65.11";
             String server = "172.22.212.179";
             //String server = "192.168.150.1";
-            //String server = "172.22.230.132";
+            //String server = "172.22.212.225";
+            string nickname = "";
 
             // Use port argument if supplied, otherwise default to 7  
             int servPort = 80;
@@ -56,7 +88,16 @@ namespace Test
 
                 if (client.Connected)
                 {
-                    Console.WriteLine("Connected to server......");
+                    Console.WriteLine("Connected to server!");
+                    stream = client.GetStream();
+
+                    Console.WriteLine("Enter nickname: ");
+                    nickname = Console.ReadLine();
+
+                    Byte[] byteBuffer = Encoding.Unicode.GetBytes(nickname);
+                    if (client.Connected)
+                        stream.Write(byteBuffer, 0, byteBuffer.Length);
+
                     thread2 = new Thread(new ThreadStart(checkForServerResponse));
                     thread2.Start();
                 }
@@ -67,15 +108,14 @@ namespace Test
                     return;
                 }
 
-                stream = client.GetStream();
-
                 while (true)
                 {
+                   // drawImage();
+                   // drawLog();
 
                     //Console.WriteLine("Commands: Send, Exit.");
                     Console.ForegroundColor = ConsoleColor.Blue;
                     string message = Console.ReadLine();
-                    Console.ForegroundColor = ConsoleColor.Red;
 
                     Byte[] byteBuffer = Encoding.Unicode.GetBytes(message);
                     //Send the encoded string to the server  
