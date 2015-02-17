@@ -72,7 +72,7 @@ namespace Test
             }
 
             //String server = "94.254.65.11";
-            String server = "172.22.212.179";
+            String server = "192.168.1.35";
             //String server = "192.168.150.1";
             //String server = "172.22.212.225";
             string nickname = "";

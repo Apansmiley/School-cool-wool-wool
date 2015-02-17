@@ -13,11 +13,12 @@ namespace Test
     {
         static void Main(string[] args)
         {
-           
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form1());
-                    
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+            //        CClient client = new CClient();
+            //client.start();
                
             }
             }
