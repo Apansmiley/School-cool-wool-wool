@@ -18,28 +18,28 @@ namespace Test
             int cmd = 0;
             if (int.TryParse(Console.ReadLine(), out cmd))
             {
-            switch (cmd)
-            {
-                case 1:            
-                CServer server = new CServer();
-                server.Start();
-                break;
+                switch (cmd)
+                {
+                    case 1:            
+                    CServer server = new CServer();
+                    server.Start();
+                    break;
             
-                case 2:
-                CClient client = new CClient();
-                client.start();
-                break;
-                case 3:
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form1());
+                    case 2:
+                    CClient client = new CClient();
+                    client.start();
+                    break;
+                    case 3:
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new Form1());
                     
                     
-                break;
-                default:
-                Console.WriteLine("You didn't choose a correct option... Good night");
-                break;
-            }
+                    break;
+                    default:
+                    Console.WriteLine("You didn't choose a correct option... Good night");
+                    break;
+                }
             }
         }
     }    

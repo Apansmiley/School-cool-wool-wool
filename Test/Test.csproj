@@ -58,6 +58,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Server.cs" />
+    <Compile Include="SQL.cs" />
     <Compile Include="Timer.cs" />
   </ItemGroup>
   <ItemGroup>

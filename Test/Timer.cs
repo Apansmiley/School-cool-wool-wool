@@ -28,5 +28,9 @@ namespace Test
                 return true;
             return false;
         }
+        public long timeLeft()
+        {
+            return stopTime - watch.ElapsedMilliseconds;
+        }
     }
 }
