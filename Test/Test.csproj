@@ -78,18 +78,51 @@
     <None Include="Resources\hangman.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\8.png" />
+    <Content Include="Resources\victory.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\victory1.png" />
+    <None Include="Resources\button11.png" />
+    <Content Include="Resources\button1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\11.png" />
+    <None Include="Resources\21.png" />
+    <None Include="Resources\31.png" />
+    <None Include="Resources\41.png" />
+    <None Include="Resources\51.png" />
+    <None Include="Resources\61.png" />
+    <None Include="Resources\71.png" />
+    <Content Include="Resources\8.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\81.png" />
+    <Content Include="Resources\button.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\1.png" />
+    <Content Include="Resources\1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\2.png" />
-    <Content Include="Resources\3.png" />
-    <Content Include="Resources\4.png" />
-    <Content Include="Resources\5.png" />
-    <Content Include="Resources\6.png" />
-    <Content Include="Resources\7.png" />
+    <Content Include="Resources\2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\6.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\7.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
